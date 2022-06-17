@@ -1,0 +1,13 @@
+pytorch-lightning==1.5.9
+torch>=1.11.0
+torchvision
+pipe
+opencv-python
+Pillow
+numpy
+pandas
+albumentations
+tqdm
+mlflow
+fire
+einops
