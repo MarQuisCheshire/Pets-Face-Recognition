@@ -44,3 +44,12 @@ class SoftmaxBasedMetricLearning(nn.Module):
         logits = self.add_margin(tensor, label)
         loss = self.focal_loss(logits, label)
         return {'loss': loss, 'emb': tensor, 'logits': logits}
+
+
+class DummyWrapper(nn.Module):
+    def __init__(self, model, *_, **__):
+        super().__init__()
+        self.module = model
+
+    def forward(self, *args, **kwargs):
+        return self.module(*args, **kwargs)
