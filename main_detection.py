@@ -50,14 +50,14 @@ if __name__ == '__main__':
         user = os.environ['LOGNAME'] if 'LOGNAME' in os.environ else os.environ.get('USERNAME', 'unknown')
 
         lightning_logger = None
-        # lightning_logger = MLFlowLogger(
-        #     tracking_uri=config.get('mlflow_target_uri'),
-        #     experiment_name=experiment_name,
-        #     tags={MLFLOW_USER: user,
-        #           # MLFLOW_GIT_COMMIT: git_hash,
-        #           MLFLOW_RUN_NAME: config.get('run_name', 'default')},
-        #     # tensorboard_path=checkpoint_path / 'tensorboard_log_dir'
-        # ) if config.get('mlflow_target_uri') is not None else None
+        lightning_logger = MLFlowLogger(
+            tracking_uri=config.get('mlflow_target_uri'),
+            experiment_name=experiment_name,
+            tags={MLFLOW_USER: user,
+                  # MLFLOW_GIT_COMMIT: git_hash,
+                  MLFLOW_RUN_NAME: config.get('run_name', 'default')},
+            # tensorboard_path=checkpoint_path / 'tensorboard_log_dir'
+        ) if config.get('mlflow_target_uri') is not None else None
 
         checkpoint_path.mkdir(parents=True, exist_ok=True)
         config.img_dir.mkdir(exist_ok=True)
@@ -86,16 +86,6 @@ if __name__ == '__main__':
         config.opt_params['main']['lr'] = new_lr
         controller = DetectionController(config=config)
 
-    # trainer.fit(controller)
-    controller = DetectionController.load_from_checkpoint(
-            str(
-                Path(
-                    'mlruns/8/e0659336f7d3449fb7b2eac767df655f/artifacts/checkpoints/'
-                    '8/e0659336f7d3449fb7b2eac767df655f/checkpoints/epoch=64-step=16249.ckpt'
-                )
-            ),
-            config=controller.config
-        )
-    trainer.test(controller)
+    trainer.fit(controller)
 
     print('Completed!')
