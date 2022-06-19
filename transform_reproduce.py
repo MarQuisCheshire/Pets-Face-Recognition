@@ -232,10 +232,3 @@ if __name__ == '__main__':
     data_25(preprocessor, 1)
     data_25(preprocessor, 2)
     extra_petfinder(preprocessor, 'cat')
-
-    preprocessor = Preproc4(device='cuda:0', masked=True, mask_thr=0.7)
-    v = 'v4'
-    extra_petfinder(preprocessor)
-    data_25(preprocessor, 1)
-    data_25(preprocessor, 2)
-    extra_petfinder(preprocessor, 'cat')
