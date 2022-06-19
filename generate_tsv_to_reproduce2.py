@@ -215,7 +215,7 @@ def main():
     #     vector = body_models[type_](body_img_tensor).cpu()
     #     return vector
 
-    db = prepare_data(Path('../pets_datasets/_blip_split_v3_public/test'), pipeline, body_pipeline)
+    db = prepare_data(Path('../pets_datasets/_blip_split_v3_public/test'), pipeline, None)
 
     df = create_table(db)
 
