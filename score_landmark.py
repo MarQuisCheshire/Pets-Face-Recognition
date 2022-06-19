@@ -118,4 +118,5 @@ def main(path: str, ds: str):
 
 
 if __name__ == '__main__':
-    main('landmark.tsv', 'data_25')
+    # main('landmark.tsv', 'data_25')
+    fire.Fire(main)

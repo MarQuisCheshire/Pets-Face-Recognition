@@ -23,11 +23,26 @@ The script downloads all the needed datasets to the directory ../pets_datasets
 `python main_keypoints.py --config configs/to_reproduce/keypoint/keypoints_config.py`
 
 
+# Testing detectors
+
+You need to modify prepare_tables.py by providing appropriate preprocessing
+
+`python prepare_tables.py` to get .tsv file for assessment
+
+To test Head or Body detectors use:
+
+`python score_detection.py {path to the .tsv} data_25 {Head|Animal}`
+
+For landmark detection evaluation use:
+
+`python score_landmark.py {path to the .tsv} data_25`
+
+
 ## Training Feature Extractors (FE)
 
 ### Prepare the datasets for training Feature Extraction
 
-`python transform_dataset.py`
+`python transform_reproduce.py`
 
 
 ### Training FE for Cats

@@ -5,6 +5,7 @@ from contextlib import suppress
 from copy import deepcopy
 from pathlib import Path
 
+import fire
 import numpy as np
 import pandas as pd
 from PIL import Image
@@ -168,5 +169,6 @@ def main(path: str, ds: str, mode: str):
 
 if __name__ == '__main__':
     # parse_labeled_studio(Path('../pets_datasets/sampled results'), Path('../pets_datasets/data_25_labeled'))
-    main('detected_body.tsv', 'data_25', 'Animal')
-    main('detected_head.tsv', 'data_25', 'Head')
+    # main('detected_body.tsv', 'data_25', 'Animal')
+    # main('detected_head.tsv', 'data_25', 'Head')
+    fire.Fire(main)
