@@ -18,7 +18,6 @@ data_25 = (
     "https://transfer.sh/get/a0C1H3/data_25.zip"
 )
 
-
 data_25_labeled = (
     "https://zenodo.org/record/6664769/files/data_25_labeled.zip?download=1"
 )
@@ -78,21 +77,24 @@ def download(path: Path) -> None:
     else:
         print("Downloading data_25 _labelled")
         for url in data_25_labeled:
-            download_and_extract_archive(url, download_root=str(path), remove_finished=True)
+            download_and_extract_archive(url, download_root=str(path), remove_finished=True,
+                                         filename="data_25_labeled.zip")
 
     if (path / "petfinder_extra_cats").exists():
         print("Skipping Petfinder cats")
     else:
         print("Downloading Petfinder cats")
-        for url in pet_finder_cats:
-            download_and_extract_archive(url, download_root=str(path / "petfinder_extra_cats"), remove_finished=True)
+        for i, url in enumerate(pet_finder_cats):
+            download_and_extract_archive(url, download_root=str(path / "petfinder_extra_cats"), remove_finished=True,
+                                         filename=f'petfinder_extra_cats{i + 1}.zip')
 
     if (path / "petfinder_extra_dogs").exists():
         print("Skipping Petfinder dogs")
     else:
         print("Downloading Petfinder dogs")
-        for url in pet_finder_cats:
-            download_and_extract_archive(url, download_root=str(path / "petfinder_extra_dogs"), remove_finished=True)
+        for i, url in enumerate(pet_finder_dogs):
+            download_and_extract_archive(url, download_root=str(path / "petfinder_extra_dogs"), remove_finished=True,
+                                         filename=f'petfinder_extra_dogs{i + 1}.zip')
 
 
 if __name__ == "__main__":
