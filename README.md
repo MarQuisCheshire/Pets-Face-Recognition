@@ -12,7 +12,9 @@ List of the datasets:
 
 The script downloads all the needed datasets to the directory ../pets_datasets
 
-## Checkpoints
+## Checkpoints and our configs
+
+To download the checkpoints and configs to use them run:
 
 `python download_models.py`
 
@@ -68,11 +70,11 @@ Body-specific model
 
 ### Generate .tsv for kashtanka.pet testing
 
-Combination
+Combination:
 
 `python generate_tsv_to_reproduce1.py`
 
-Only Face-based
+Only Face-based:
 
 `python generate_tsv_to_reproduce2.py`
 
