@@ -4,7 +4,9 @@
 List of the datasets:
 1. Oxford IIIT Pet (https://www.robots.ox.ac.uk/~vgg/data/pets/)
 2. Cat Dataset (https://www.microsoft.com/en-us/research/wp-content/uploads/2008/10/ECCV_CAT_PROC.pdf)
-3. Petfinder data
+3. Petfinder cats (https://zenodo.org/record/6656292#.Yq66DHZBwuU)
+4. Petfinder dogs (https://zenodo.org/record/6660349#.Yq8TJHZBwuU)
+5. Labelled data from Kashtanka.pet (https://zenodo.org/record/6664769#.Yq8GuXZBwuU)
 
 `python download_datasets.py`
 

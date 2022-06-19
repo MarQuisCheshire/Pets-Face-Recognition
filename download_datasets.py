@@ -18,12 +18,34 @@ data_25 = (
     "https://transfer.sh/get/a0C1H3/data_25.zip"
 )
 
-pet_finder = (
+
+data_25_labeled = (
+    "https://zenodo.org/record/6664769/files/data_25_labeled.zip?download=1"
+)
+
+pet_finder_cats = (
+    "https://zenodo.org/record/6656292/files/petfinder_extra_cats1.zip?download=1",
+    "https://zenodo.org/record/6656292/files/petfinder_extra_cats2.zip?download=1",
+    "https://zenodo.org/record/6656292/files/petfinder_extra_cats3.zip?download=1",
+    "https://zenodo.org/record/6656292/files/petfinder_extra_cats4.zip?download=1",
+    "https://zenodo.org/record/6656292/files/petfinder_extra_cats5.zip?download=1",
+    "https://zenodo.org/record/6656292/files/petfinder_extra_cats6.zip?download=1"
+)
+
+pet_finder_dogs = (
+    "https://zenodo.org/record/6660349/files/petfinder_extra_dogs1.zip?download=1",
+    "https://zenodo.org/record/6660349/files/petfinder_extra_dogs2.zip?download=1",
+    "https://zenodo.org/record/6660349/files/petfinder_extra_dogs3.zip?download=1",
+    "https://zenodo.org/record/6660349/files/petfinder_extra_dogs4.zip?download=1",
+    "https://zenodo.org/record/6660349/files/petfinder_extra_dogs5.zip?download=1",
+    "https://zenodo.org/record/6660349/files/petfinder_extra_dogs6.zip?download=1",
+    "https://zenodo.org/record/6660349/files/petfinder_extra_dogs7.zip?download=1",
+    "https://zenodo.org/record/6660349/files/petfinder_extra_dogs8.zip?download=1",
+    "https://zenodo.org/record/6660349/files/petfinder_extra_dogs9.zip?download=1",
 )
 
 
 def download(path: Path) -> None:
-
     path.mkdir(parents=True, exist_ok=True)
 
     if (path / "oxford-iiit-pet").exists():
@@ -31,7 +53,8 @@ def download(path: Path) -> None:
     else:
         print("Downloading Oxford IIIT Pet")
         for url, md5 in oxford_ds:
-            download_and_extract_archive(url, download_root=str(path / "oxford-iiit-pet"), md5=md5, remove_finished=True)
+            download_and_extract_archive(url, download_root=str(path / "oxford-iiit-pet"), md5=md5,
+                                         remove_finished=True)
 
     if (path / "CAT_DATASET").exists():
         print("Skipping Cat Dataset with landmarks")
@@ -50,12 +73,26 @@ def download(path: Path) -> None:
         for url in data_25:
             download_and_extract_archive(url, download_root=str(path), remove_finished=True)
 
-    if (path / "petfinder_extra_cats").exists() and (path / "petfinder_extra_dogs").exists():
-        print("Skipping Petfinder")
+    if (path / "data_25_labelled").exists():
+        print("Skipping data_25 _labelled")
     else:
-        print("Downloading Petfinder")
-        for url in pet_finder:
+        print("Downloading data_25 _labelled")
+        for url in data_25_labeled:
             download_and_extract_archive(url, download_root=str(path), remove_finished=True)
+
+    if (path / "petfinder_extra_cats").exists():
+        print("Skipping Petfinder cats")
+    else:
+        print("Downloading Petfinder cats")
+        for url in pet_finder_cats:
+            download_and_extract_archive(url, download_root=str(path / "petfinder_extra_cats"), remove_finished=True)
+
+    if (path / "petfinder_extra_dogs").exists():
+        print("Skipping Petfinder dogs")
+    else:
+        print("Downloading Petfinder dogs")
+        for url in pet_finder_cats:
+            download_and_extract_archive(url, download_root=str(path / "petfinder_extra_dogs"), remove_finished=True)
 
 
 if __name__ == "__main__":
