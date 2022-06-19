@@ -15,11 +15,11 @@ cat_dataset = (
 )
 
 data_25 = (
-    "https://transfer.sh/get/a0C1H3/data_25.zip"
+    "https://transfer.sh/get/a0C1H3/data_25.zip",
 )
 
 data_25_labeled = (
-    "https://zenodo.org/record/6664769/files/data_25_labeled.zip?download=1"
+    "https://zenodo.org/record/6664769/files/data_25_labeled.zip?download=1",
 )
 
 pet_finder_cats = (
