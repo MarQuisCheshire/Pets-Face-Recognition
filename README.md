@@ -64,3 +64,16 @@ Head-specific model
 Body-specific model
 
 `python main_keypoints.py --config configs/to_reproduce/dog_fe/body_dog_fe.py`
+
+
+### Generate .tsv for kashtanka.pet testing
+
+Combination
+
+`python generate_tsv_to_reproduce1.py`
+
+Only Face-based
+
+`python generate_tsv_to_reproduce2.py`
+
+Pay attention you can modify the scripts and provide your own checkpoints
