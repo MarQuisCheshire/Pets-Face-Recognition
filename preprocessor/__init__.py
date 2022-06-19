@@ -202,7 +202,7 @@ class Preproc3:
         #     ),
         #     config=get_dict_wrapper(r'mlruns/9/4100f0feaa39434b92b56b5faf000d97/artifacts/keypoints_config.py')
         # ).eval().model_loss
-        self.detector = KeyPointsController(get_dict_wrapper(Path('configs/to_reproduce/keyoint/keypoints_config.py')))
+        self.detector = KeyPointsController(get_dict_wrapper(Path('configs/to_reproduce/keypoint/keypoints_config.py')))
         self.detector.load_state_dict(torch.load(Path('configs/to_reproduce/keypoint/epoch=14.ckpt')))
         self.detector = self.detector.eval().model_loss
         self.detector.to(self.device)
@@ -305,7 +305,7 @@ class Preproc6:
         #     ),
         #     config=get_dict_wrapper(r'mlruns/9/4100f0feaa39434b92b56b5faf000d97/artifacts/keypoints_config.py')
         # ).eval().model_loss
-        self.detector = KeyPointsController(get_dict_wrapper(Path('configs/to_reproduce/keyoint/keypoints_config.py')))
+        self.detector = KeyPointsController(get_dict_wrapper(Path('configs/to_reproduce/keypoint/keypoints_config.py')))
         self.detector.load_state_dict(torch.load(Path('configs/to_reproduce/keypoint/epoch=14.ckpt')))
         self.detector = self.detector.eval().model_loss
         self.detector.to(self.device)
