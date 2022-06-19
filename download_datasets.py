@@ -16,7 +16,12 @@ cat_dataset = (
 
 data_25 = (
     "https://transfer.sh/get/a0C1H3/data_25.zip",
+    # "https://minio.k8s.grechka.family/public-shared-blobs/pet_data_25.tar.gz",
 )
+
+kashtanka_test = [
+    "https://minio.k8s.grechka.family/public-shared-blobs/_blip_split_v3_public.tar.gz"
+]
 
 data_25_labeled = (
     "https://zenodo.org/record/6664769/files/data_25_labeled.zip?download=1",
@@ -69,6 +74,13 @@ def download(path: Path) -> None:
         print("Skipping data_25")
     else:
         print("Downloading data_25")
+        for url in data_25:
+            download_and_extract_archive(url, download_root=str(path), remove_finished=True)
+
+    if (path / "_blip_split_v3_public").exists():
+        print("Skipping _blip_split_v3_public")
+    else:
+        print("Downloading _blip_split_v3_public")
         for url in data_25:
             download_and_extract_archive(url, download_root=str(path), remove_finished=True)
 
