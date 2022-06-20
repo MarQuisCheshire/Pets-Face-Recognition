@@ -15,8 +15,8 @@ cat_dataset = (
 )
 
 data_25 = (
-    "https://transfer.sh/get/a0C1H3/data_25.zip",
-    # "https://minio.k8s.grechka.family/public-shared-blobs/pet_data_25.tar.gz",
+    # "https://transfer.sh/get/a0C1H3/data_25.zip",
+    "https://minio.k8s.grechka.family/public-shared-blobs/pet_data_25.tar.gz",
 )
 
 kashtanka_test = [
@@ -67,7 +67,6 @@ def download(path: Path) -> None:
         for url in cat_dataset[:-1]:
             download_and_extract_archive(url, download_root=str(path / "CAT_DATASET"), remove_finished=True)
         # fix
-        os.remove(str(path / "CAT_DATASET" / "CAT_00" / "00000003_015.jpg.cat"))
         download_url(cat_dataset[-1], str(path / "CAT_DATASET" / "CAT_00"), "00000003_015.jpg.cat", None)
 
     if (path / "data_25").exists():
