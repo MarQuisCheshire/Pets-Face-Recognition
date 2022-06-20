@@ -67,6 +67,7 @@ def download(path: Path) -> None:
         for url in cat_dataset[:-1]:
             download_and_extract_archive(url, download_root=str(path / "CAT_DATASET"), remove_finished=True)
         # fix
+    if not (path / "CAT_DATASET" / "CAT_00" / "00000003_015.jpg.cat").exists():
         download_url(cat_dataset[-1], str(path / "CAT_DATASET" / "CAT_00"), "00000003_015.jpg.cat", None)
 
     if (path / "data_25").exists():
