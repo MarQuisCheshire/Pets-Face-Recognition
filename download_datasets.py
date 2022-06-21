@@ -81,7 +81,7 @@ def download(path: Path) -> None:
         print("Skipping _blip_split_v3_public")
     else:
         print("Downloading _blip_split_v3_public")
-        for url in data_25:
+        for url in kashtanka_test:
             download_and_extract_archive(url, download_root=str(path), remove_finished=True)
 
     if (path / "data_25_labelled").exists():
