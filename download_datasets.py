@@ -84,7 +84,7 @@ def download(path: Path) -> None:
         for url in kashtanka_test:
             download_and_extract_archive(url, download_root=str(path), remove_finished=True)
 
-    if (path / "data_25_labelled").exists():
+    if (path / "data_25_labeled").exists():
         print("Skipping data_25 _labelled")
     else:
         print("Downloading data_25 _labelled")
