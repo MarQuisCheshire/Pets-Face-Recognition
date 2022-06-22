@@ -1,6 +1,6 @@
 import time
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Any
 
 import matplotlib.pyplot as plt
 import pytorch_lightning
@@ -20,6 +20,9 @@ class Controller(pytorch_lightning.LightningModule):
         model = self.config.model()
         self.model_loss = self.config.loss(config, model)
         self.save_hyperparameters({i: repr(j) for i, j in config.items()})
+
+    def forward(self, *args, **kwargs) -> Any:
+        return self.model_loss(*args, **kwargs)
 
     def training_step(self, batch, batch_idx) -> STEP_OUTPUT:
         loss = self.model_loss(batch['x'], batch['label'])
