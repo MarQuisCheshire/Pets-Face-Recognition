@@ -237,4 +237,4 @@ if __name__ == '__main__':
         else:
             d.append(d2[q])
     df_final = pd.DataFrame(d, columns=df1.columns)
-    df_final.to_csv('..\\kashtanka_pet_scoring-master\\pred_scores_test.tsv', index=False, sep='\t')
+    df_final.to_csv('pred_scores_test.tsv', index=False, sep='\t')
