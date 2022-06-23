@@ -102,22 +102,28 @@ def calc_scores(init_db: Dict[Path, Any], extra_db: Dict[Path, Any]) -> List[Any
             score = {0: 0, 1: 0}
             if len(v1) != 0 and len(verify['head_vectors']) != 0:
                 score[0] = mean_strategy_cal_scores(v1, verify['head_vectors'])
+                score[0] = calibrators[type_].predict(np.array(score[0]).reshape(1, ))[0]
             if len(v1_body) != 0 and len(verify['body_vectors']) != 0:
                 score[1] = mean_strategy_cal_scores(v1_body, verify['body_vectors'])
+                score[1] = calibrators[type_ + 2].predict(np.array(score[1]).reshape(1, ))[0]
             if sum(score.values()) == 0:
                 continue
-            score = score[1] if len(v1) == 0 or (score[0] == 0 and score[1] > [0.9069641, 0.985643][type_ - 1]) else score[0]
-            # score = score[1] if len(v1) == 0 or (score[0] == 0 and score[1] > [0.9069641, 0.987452][type_ - 1]) else score[0]
+            # score = score[1] if len(v1) == 0 or (score[0] == 0 and score[1] > [0.9069641, 0.985643][type_ - 1]) else score[0]
+            # score = score[1] if len(v1) == 0 or (score[0] == 0 and score[1] > [0.9499042, 0.987568][type_ - 1]) else score[0]
+            score = np.max(list(score.values()))
             l.append((f2, score))
         l = sorted(l, key=lambda x: x[1], reverse=True)
         answer = [l[i][0] for i in range(min(100, len(l)))]
         if l:
+            match10 = [l[0][1]]
+            for i in range(9):
+                match10.append((1 - np.sum(match10)) * l[i + 1][1])
             df.append(
                 (
                     str(f.name),
                     l[0][1],
-                    np.mean([l[i][1] for i in range(3)]),
-                    np.mean([l[i][1] for i in range(10)]),
+                    np.sum([l[0][1], (1 - l[0][1]) * l[1][1], (1 - (1 - l[0][1]) * l[1][1] + l[0][1]) * l[2][1]]),
+                    np.sum(match10),
                     ','.join([str(i.name) for i in answer])
                 )
             )
@@ -146,7 +152,7 @@ def create_table(db: Dict[Path, Any]) -> pd.DataFrame:
 def main():
     device = 'cuda:0'
 
-    body_preproc = Preproc4(device=device)
+    body_preproc = Preproc4(device=device, thr=0.7, mask_thr=True)
 
     head_preproc = Preproc3(
         np.array([[70, 92], [154, 92], [112, 160]]),
@@ -188,25 +194,35 @@ def main():
     dog_model.to(device)
     cat_model.to(device)
 
+    # dog_body_model = Controller.load_from_checkpoint(
+    #     str(
+    #         Path(
+    #             'mlruns/1/f6fca5573f62410ab0649407c951c153/artifacts/checkpoints'
+    #             '/1/f6fca5573f62410ab0649407c951c153/checkpoints/epoch=36-step=42142.ckpt'
+    #         )
+    #     ),
+    #     config=get_dict_wrapper('mlruns/11/84ff365352fa4e058b30c882bc00a607/artifacts/body_dog_fe.py')
+    # ).eval().model_loss
+
     dog_body_model = Controller.load_from_checkpoint(
         str(
             Path(
-                'mlruns/1/f6fca5573f62410ab0649407c951c153/artifacts/checkpoints'
-                '/1/f6fca5573f62410ab0649407c951c153/checkpoints/epoch=36-step=42142.ckpt'
+                'mlruns/11/f19ad652be834f618261844c9d63927a/artifacts/checkpoints'
+                '/11/f19ad652be834f618261844c9d63927a/checkpoints/epoch=37-step=96671.ckpt'
             )
         ),
-        config=get_dict_wrapper('mlruns/11/84ff365352fa4e058b30c882bc00a607/artifacts/body_dog_fe.py')
+        config=get_dict_wrapper('mlruns/11/f19ad652be834f618261844c9d63927a/artifacts/body_dog_fe.py')
     ).eval().model_loss
 
-    cat_body_model = Controller.load_from_checkpoint(
-        str(
-            Path(
-                'mlruns/11/84ff365352fa4e058b30c882bc00a607/artifacts/checkpoints'
-                '/11/84ff365352fa4e058b30c882bc00a607/checkpoints/epoch=39-step=100559.ckpt'
-            )
-        ),
-        config=get_dict_wrapper('mlruns/13/6502b10363974f0f825e709b522ee659/artifacts/body_cat_fe.py')
-    ).eval().model_loss
+    # cat_body_model = Controller.load_from_checkpoint(
+    #     str(
+    #         Path(
+    #             'mlruns/11/84ff365352fa4e058b30c882bc00a607/artifacts/checkpoints'
+    #             '/11/84ff365352fa4e058b30c882bc00a607/checkpoints/epoch=39-step=100559.ckpt'
+    #         )
+    #     ),
+    #     config=get_dict_wrapper('mlruns/13/6502b10363974f0f825e709b522ee659/artifacts/body_cat_fe.py')
+    # ).eval().model_loss
     # cat_body_model = Controller.load_from_checkpoint(
     #     str(
     #         Path(
@@ -216,6 +232,15 @@ def main():
     #     ),
     #     config=get_dict_wrapper('mlruns/13/7c1fc7d0fae74936b9297c6669335aa0/artifacts/body_cat_fe.py')
     # ).eval().model_loss
+    cat_body_model = Controller.load_from_checkpoint(
+        str(
+            Path(
+                'mlruns/13/e8070f822d8b4b31b7086c1e3add5dca/artifacts/checkpoints'
+                '/13/e8070f822d8b4b31b7086c1e3add5dca/checkpoints/epoch=8-step=18314.ckpt'
+            )
+        ),
+        config=get_dict_wrapper('mlruns/13/e8070f822d8b4b31b7086c1e3add5dca/artifacts/body_cat_fe.py')
+    ).eval().model_loss
     dog_body_model.add_margin = None
     cat_body_model.add_margin = None
     dog_body_model.to(device)
@@ -250,7 +275,7 @@ def main():
         vector = body_models[type_](body_img_tensor).cpu()
         return vector
 
-    db_path = Path('scores3.pickle')
+    db_path = Path('scores4.pickle')
     if db_path.exists():
         with open(db_path, 'rb') as f:
             db = pickle.load(f)
@@ -261,12 +286,19 @@ def main():
 
     df = create_table(db)
 
-    df.to_csv('pred_scores_test4.tsv', index=False, sep='\t')
+    df.to_csv('pred_scores_test5.tsv', index=False, sep='\t')
 
 
 if __name__ == '__main__':
+    calibrators = {}
+
+    for i, j in enumerate(('calibrator_dog_model.pickle', 'calibrator_cat_model.pickle',
+                          'calibrator_dog_body_model.pickle', 'calibrator_cat_body_model.pickle')):
+        with open(j, 'rb') as f:
+            tmp = pickle.load(f)
+        calibrators[1 + i] = tmp
     main()
-    df1 = pd.read_csv('pred_scores_test4.tsv', sep='\t')
+    df1 = pd.read_csv('pred_scores_test5.tsv', sep='\t')
     df2 = pd.read_csv('..\\kashtanka_pet_scoring-master\\preds.tsv', sep='\t')
     d1 = {row['query']: row for _, row in df1.iterrows()}
     d2 = {row['query']: row for _, row in df2.iterrows()}
@@ -277,4 +309,4 @@ if __name__ == '__main__':
         else:
             d.append(d2[q])
     df_final = pd.DataFrame(d, columns=df1.columns)
-    df_final.to_csv('..\\kashtanka_pet_scoring-master\\pred_scores_test4.tsv', index=False, sep='\t')
+    df_final.to_csv('..\\kashtanka_pet_scoring-master\\pred_scores_test5.tsv', index=False, sep='\t')

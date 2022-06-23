@@ -1,6 +1,6 @@
-import time
+from collections import defaultdict
 from pathlib import Path
-from typing import Optional, Any
+from typing import Optional, Any, List
 
 import matplotlib.pyplot as plt
 import pytorch_lightning
@@ -47,6 +47,19 @@ class Controller(pytorch_lightning.LightningModule):
 
     def test_epoch_end(self, outputs: EPOCH_OUTPUT) -> None:
         self._evaluate(outputs)
+
+    def predict_step(self, batch: Any, batch_idx: int, dataloader_idx: Optional[int] = None) -> Any:
+        return self.test_step(batch, batch_idx, dataloader_idx)
+
+    def on_predict_epoch_end(self, results: List[Any]) -> None:
+        for i in range(len(results)):
+            l = defaultdict(list)
+            for j in range(len(results[i])):
+                for k in results[i][j]:
+                    l[k].append(results[i][j][k])
+            for k in l:
+                l[k] = torch.cat(l[k], dim=0)
+            results[i] = l
 
     def _evaluate(self, outputs: EPOCH_OUTPUT) -> None:
 
@@ -157,7 +170,6 @@ class Controller(pytorch_lightning.LightningModule):
         plt.savefig(Path(self.config.get('img_dir', '.')) / f'roc_{self.current_epoch}.png')
         plt.pause(1)
         plt.close()
-
 
     @staticmethod
     def compute_accuracy(scores, labels, thresholds, fpr, fnr):
