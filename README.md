@@ -18,18 +18,36 @@ To download the checkpoints and configs to use them run:
 
 `python download_models.py`
 
-## Training body detection (Mask R-CNN)
+## Detectors
+
+Body detection and segmentation 
+
+| Dataset | AP50 | AP70 | IoU detection | IoU segmentation | 
+| ------- | ---------- | ---------- | ---------- | ---------- |
+| Oxford IIIT Pets | 0.999 | 0.999 | 0.975 | 0.946 |
+| Labelled kashtanka.pet dogs | 0.966 | 0.916 | 0.866 | N/A | 
+| Labelled kashtanka.pet cats | 0.979 | 0.952 | 0.836| N/A |
+
+Head and landmarks detection
+
+| Dataset | AP50 | AP70 | IoU | NME | NME (Median) | NME percentile 0.25 | NME percentile 0.75|
+| ------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- |
+| Cat Dataset | 0.999 | 0.988 | 0.909 | 0.044 | - | - | - |
+| Labelled kashtanka.pet dogs | 0.999 | 0.715 | 0.774 | 0.141 | 0.057 | 0.036 | 0.088 | 
+| Labelled kashtanka.pet cats | 0.975 | 0.869 | 0.866 | 0.277 | 0.061 | 0.037 | 0.094 |
+
+### Training body detection (Mask R-CNN)
 
 `python main_detection.py --config configs/to_reproduce/mask/mask_rcnn_config.py`
 
-## Training Head and Landmark Detection (Keypoint R-CNN)
+### Training Head and Landmark Detection (Keypoint R-CNN)
 
 `python main_keypoints.py --config configs/to_reproduce/keypoint/keypoints_config.py`
 
 
-# Testing detectors
+### Testing detectors
 
-You need to modify prepare_tables.py by providing appropriate preprocessing
+You need to modify prepare_tables.py by providing appropriate preprocessing if you want to test your models
 
 `python prepare_tables.py` to get .tsv file for assessment
 
