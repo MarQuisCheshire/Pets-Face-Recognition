@@ -62,6 +62,26 @@ For landmark detection evaluation use:
 
 ## Training Feature Extractors (FE)
 
+Results on data_25 val part for FE
+
+| Model | ROC AUC | Accuracy | candR@10 | candR@100 |
+| ------- | ---------- | ---------- | ---------- | ---------- | 
+| Dog Head SGD | 0.973 | 0.938 | 0.777 | 0.911 | 
+| Dog Head AdamW | 0.975 | 0.94 | 0.733 | 0.906 |
+| Cat Head SGD | 0.958 | 0.915 | 0.653 | 0.904 |
+| Cat Head AdamW | 0.97 | 0.922 | 0.753 | 0.93 |
+| Dog Body SGD | 0.974 | 0.926 | 0.636 | 0.864 | 
+| Dog Body AdamW | 0.878 | 0.8 | 0.348 | 0.56 |
+| Cat Body SGD | 0.968 | 0.917 | 0.538 | 0.811 |
+| Cat Body AdamW | 0.965 | 0.91 | 0.545 | 0.809 |
+
+Results on kashtanka.pet public test
+
+| Pipeline | candR@10 lost hard | candR@100 lost hard | candR@10 lost simple | candR@100 lost simple |
+| ------- | ---------- | ---------- | ---------- | ---------- | 
+| Head-based | 0.386 | 0.569 | 0.52 | 0.632 | 
+| Ensemble | 0.395 | 0.604 | 0.583 | 0.735 |
+
 ### Prepare the datasets for training Feature Extraction
 
 `python transform_reproduce.py`
