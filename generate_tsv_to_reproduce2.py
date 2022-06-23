@@ -91,7 +91,7 @@ def calc_scores(init_db: Dict[Path, Any], extra_db: Dict[Path, Any]) -> List[Any
     df = []
     for f, enroll in tqdm(init_db.items(), total=len(init_db)):
         v1 = enroll['head_vectors']
-        v1_body = enroll['body_vectors']
+        # v1_body = enroll['body_vectors']
         type_ = enroll['type']
 
         l = []
