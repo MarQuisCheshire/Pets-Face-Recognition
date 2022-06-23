@@ -219,14 +219,14 @@ def main():
 
     df = create_table(db)
 
-    df.to_csv('pred_scores_test.tsv', index=False, sep='\t')
+    df.to_csv('pred_scores_test2.tsv', index=False, sep='\t')
 
 
 if __name__ == '__main__':
     main()
 
     # add random rows that have no predictions
-    df1 = pd.read_csv('pred_scores_test.tsv', sep='\t')
+    df1 = pd.read_csv('pred_scores_test2.tsv', sep='\t')
     df2 = pd.read_csv('preds.tsv', sep='\t')
     d1 = {row['query']: row for _, row in df1.iterrows()}
     d2 = {row['query']: row for _, row in df2.iterrows()}
@@ -237,4 +237,4 @@ if __name__ == '__main__':
         else:
             d.append(d2[q])
     df_final = pd.DataFrame(d, columns=df1.columns)
-    df_final.to_csv('pred_scores_test.tsv', index=False, sep='\t')
+    df_final.to_csv('pred_scores_test2.tsv', index=False, sep='\t')
