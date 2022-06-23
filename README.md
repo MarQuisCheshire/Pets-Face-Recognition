@@ -116,4 +116,6 @@ Only Face-based:
 
 `python generate_tsv_to_reproduce2.py`
 
+The scripts produce pred_scores_test1.tsv and pred_scores_test2.tsv correspondingly. 
+The files then should be submitted using file sent to you after your registration on http://92.63.96.33/c/_lostpets_v3_1/description.
 Pay attention you can modify the scripts and provide your own checkpoints
