@@ -123,8 +123,8 @@ class DetectionController(pytorch_lightning.LightningModule):
                     # mAP = auc(recall, precision)
                 to_log[f'mAP {thr}'] = mAP
                 print(f'{i} mAP {thr}', mAP)
-
-            self.logger.log_metrics({f'{name} {k}': v for k, v in to_log.items()}, self.current_epoch)
+            if self.logger is not None:
+                self.logger.log_metrics({f'{name} {k}': v for k, v in to_log.items()}, self.current_epoch)
 
 
     @staticmethod
@@ -149,10 +149,13 @@ class DetectionController(pytorch_lightning.LightningModule):
         return self.config.val_dataloader()
 
     def predict_dataloader(self) -> EVAL_DATALOADERS:
-        return self.config.test_dataloader()
+        return self.test_dataloader()
 
     def test_dataloader(self) -> EVAL_DATALOADERS:
-        return self.config.test_dataloader()
+        dl = self.config.get('test_dataloader')
+        if dl is not None:
+            return dl()
+        return self.config.val_dataloader()
 
     def configure_optimizers(self):
         return self.config.optimizer(self.model_loss)

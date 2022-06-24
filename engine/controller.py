@@ -137,12 +137,12 @@ class Controller(pytorch_lightning.LightningModule):
 
             print(*[f'{name} {k}\t{v}' for k, v in metrics.items()], sep='\n')
 
-            d = ConfusionMatrixDisplay(confmat.cpu().detach().numpy().astype(int)).plot()
+            ConfusionMatrixDisplay(confmat.cpu().detach().numpy().astype(int)).plot()
             plt.savefig(Path(self.config.get('img_dir', '.')) / f' {name}_confmat_{self.current_epoch}.png')
             plt.pause(1)
             plt.close()
-
-            self.logger.log_metrics({f'{name} {k}': v for k, v in metrics.items()}, self.current_epoch)
+            if self.logger is not None:
+                self.logger.log_metrics({f'{name} {k}': v for k, v in metrics.items()}, self.current_epoch)
 
         plt.figure(figsize=(10, 10))
         for fpr, tpr, auroc, name in rocs:
@@ -174,10 +174,13 @@ class Controller(pytorch_lightning.LightningModule):
         return self.config.val_dataloader()
 
     def predict_dataloader(self) -> EVAL_DATALOADERS:
-        return self.config.test_dataloader()
+        return self.test_dataloader()
 
     def test_dataloader(self) -> EVAL_DATALOADERS:
-        return self.config.test_dataloader()
+        dl = self.config.get('test_dataloader')
+        if dl is not None:
+            return dl()
+        return self.config.val_dataloader()
 
     def configure_optimizers(self):
         return self.config.optimizer(self.model_loss)
