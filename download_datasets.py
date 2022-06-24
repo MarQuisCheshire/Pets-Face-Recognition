@@ -150,4 +150,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    download_all()

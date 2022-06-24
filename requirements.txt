@@ -12,3 +12,4 @@ mlflow
 fire
 einops
 imutils
+imgaug
