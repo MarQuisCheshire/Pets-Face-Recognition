@@ -1,4 +1,4 @@
-import os
+import sys
 from pathlib import Path
 
 from torchvision.datasets.utils import download_and_extract_archive, download_url
@@ -15,7 +15,6 @@ cat_dataset = (
 )
 
 data_25 = (
-    # "https://transfer.sh/get/a0C1H3/data_25.zip",
     "https://minio.k8s.grechka.family/public-shared-blobs/pet_data_25.tar.gz",
 )
 
@@ -49,9 +48,7 @@ pet_finder_dogs = (
 )
 
 
-def download(path: Path) -> None:
-    path.mkdir(parents=True, exist_ok=True)
-
+def download_oxford(path):
     if (path / "oxford-iiit-pet").exists():
         print("Skipping Oxford IIIT Pet")
     else:
@@ -60,6 +57,8 @@ def download(path: Path) -> None:
             download_and_extract_archive(url, download_root=str(path / "oxford-iiit-pet"), md5=md5,
                                          remove_finished=True)
 
+
+def download_cat_dataset(path):
     if (path / "CAT_DATASET").exists():
         print("Skipping Cat Dataset with landmarks")
     else:
@@ -70,6 +69,8 @@ def download(path: Path) -> None:
     if not (path / "CAT_DATASET" / "CAT_00" / "00000003_015.jpg.cat").exists():
         download_url(cat_dataset[-1], str(path / "CAT_DATASET" / "CAT_00"), "00000003_015.jpg.cat", None)
 
+
+def download_data_25(path):
     if (path / "data_25").exists():
         print("Skipping data_25")
     else:
@@ -77,6 +78,8 @@ def download(path: Path) -> None:
         for url in data_25:
             download_and_extract_archive(url, download_root=str(path), remove_finished=True)
 
+
+def download_kashtanka_test(path):
     if (path / "_blip_split_v3_public").exists():
         print("Skipping _blip_split_v3_public")
     else:
@@ -84,6 +87,8 @@ def download(path: Path) -> None:
         for url in kashtanka_test:
             download_and_extract_archive(url, download_root=str(path), remove_finished=True)
 
+
+def download_data_25_labeled(path):
     if (path / "data_25_labeled").exists():
         print("Skipping data_25 _labelled")
     else:
@@ -92,6 +97,8 @@ def download(path: Path) -> None:
             download_and_extract_archive(url, download_root=str(path), remove_finished=True,
                                          filename="data_25_labeled.zip")
 
+
+def download_pet_finder_cats(path):
     if (path / "petfinder_extra_cats").exists():
         print("Skipping Petfinder cats")
     else:
@@ -100,6 +107,8 @@ def download(path: Path) -> None:
             download_and_extract_archive(url, download_root=str(path / "petfinder_extra_cats"), remove_finished=True,
                                          filename=f'petfinder_extra_cats{i + 1}.zip')
 
+
+def download_pet_finder_dogs(path):
     if (path / "petfinder_extra_dogs").exists():
         print("Skipping Petfinder dogs")
     else:
@@ -109,5 +118,36 @@ def download(path: Path) -> None:
                                          filename=f'petfinder_extra_dogs{i + 1}.zip')
 
 
+def download_all(path: Path):
+    download_oxford(path)
+    download_cat_dataset(path)
+    download_data_25(path)
+    download_data_25_labeled(path)
+    download_kashtanka_test(path)
+    download_pet_finder_cats(path)
+    download_pet_finder_dogs(path)
+
+
+download_options = {
+    'oxford': download_oxford,
+    'cat_dataset': download_cat_dataset,
+    'data_25': download_data_25,
+    'data_25_labeled': download_data_25_labeled,
+    'kashtanka_test': download_kashtanka_test,
+    'petfinder_dogs': download_pet_finder_dogs,
+    'petfinder_cats': download_pet_finder_cats,
+    'all': download_all
+}
+
+
+def main():
+    p = Path("../pets_datasets")
+    p.mkdir(parents=True, exist_ok=True)
+    args = sys.argv
+    for i in args:
+        if i in download_options:
+            download_options[i](p)
+
+
 if __name__ == "__main__":
-    download(Path("../pets_datasets"))
+    main()

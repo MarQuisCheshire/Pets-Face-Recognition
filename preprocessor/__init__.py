@@ -247,7 +247,7 @@ class Preproc4:
         if self.return_for_metrics:
             return bbox, score
         aimg = aimg[bbox[1]:bbox[3], bbox[0]:bbox[2]]
-        return aimg
+        return aimg.astype(np.uint8)
 
     def models_init(self):
         # self.detector = DetectionController.load_from_checkpoint(
