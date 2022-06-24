@@ -75,7 +75,7 @@ Results on data_25 val part for FE
 | Cat Body SGD | 0.968 | 0.917 | 0.538 | 0.811 |
 | Cat Body AdamW | 0.965 | 0.91 | 0.545 | 0.809 |
 
-Results on kashtanka.pet public test
+Results of the pipelines (detector + FE) on kashtanka.pet public test
 
 | Pipeline | candR@10 lost hard | candR@100 lost hard | candR@10 lost simple | candR@100 lost simple |
 | ------- | ---------- | ---------- | ---------- | ---------- | 

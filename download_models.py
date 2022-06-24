@@ -3,7 +3,10 @@ from pathlib import Path
 from torchvision.datasets.utils import download_and_extract_archive
 
 urls = [
-    "https://zenodo.org/record/6665690/files/to_reproduce.zip?download=1"
+    # v 1.0
+    # "https://zenodo.org/record/6665690/files/to_reproduce.zip?download=1"
+    # v 1.1 (add_margin weight is cut off)
+    "https://zenodo.org/record/6721246/files/to_reproduce.zip?download=1"
 ]
 
 
