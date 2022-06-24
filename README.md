@@ -45,19 +45,29 @@ Head and landmarks detection
 `python main_keypoints.py --config configs/to_reproduce/keypoint/keypoints_config.py`
 
 
-### Testing detectors
+### Testing models for body, head and landmarks detection
 
-You need to modify prepare_tables.py by providing appropriate preprocessing if you want to test your models
+prepare_table.py runs Mask R-CNN trained on Oxford IIIT pets to predict body bounding boxes,
+and Keypoint R-CNN trained on Cat Dataset + 350 manually selected examples of dogs from kashtanka.pet with good annotations from the previous model to predict head bounding boxes and landmarks.
+If you want to test your own models you need to create a script analogous to prepare_tables.py to create tables with predictions.
 
-`python prepare_tables.py` to get .tsv file for assessment
+`python prepare_tables.py` to get 3 .tsv files for the assessment
 
-To test Head or Body detectors use:
+To test Head detection use:
 
-`python score_detection.py {path to the .tsv} data_25 {Head|Animal}`
+`python score_detection.py detected_head.tsv data_25 Head`
+
+To test Body detection use:
+
+`python score_detection.py detected_body.tsv data_25 Animal`
 
 For landmark detection evaluation use:
 
-`python score_landmark.py {path to the .tsv} data_25`
+`python score_landmark.py landmark.tsv data_25`
+
+### How to convert from Label Studio format to the format of the evaluation scripts
+
+TODO
 
 
 ## Training Feature Extractors (FE)
@@ -83,27 +93,28 @@ Results of the pipelines (detector + FE) on kashtanka.pet public test
 | Ensemble | 0.395 | 0.604 | 0.583 | 0.735 |
 
 ### Prepare the datasets for training Feature Extraction
+transform_reproduce.py runs head detection and alignment model and body detection and segmentation model on petfinder data and kashtanka_25
 
 `python transform_reproduce.py`
 
 
 ### Training FE for Cats
-Head-specific model
+Head-specific model (Dog Head SGD)
 
-`python main_keypoints.py --config configs/to_reproduce/cat_fe/cat_fe_head.py`
+`python main.py --config configs/to_reproduce/cat_fe/cat_fe_head.py`
 
-Body-specific model
+Body-specific model (Dog Body SGD)
 
-`python main_keypoints.py --config configs/to_reproduce/cat_fe/body_cat_fe.py`
+`python main.py --config configs/to_reproduce/cat_fe/body_cat_fe.py`
 
 ### Training FE for Dogs
-Head-specific model
+Head-specific model (Cat Head SGD)
 
-`python main_keypoints.py --config configs/to_reproduce/dog_fe/fe_dogs_config.py`
+`python main.py --config configs/to_reproduce/dog_fe/fe_dogs_config.py`
 
-Body-specific model
+Body-specific model (Cat Body SGD)
 
-`python main_keypoints.py --config configs/to_reproduce/dog_fe/body_dog_fe.py`
+`python main.py --config configs/to_reproduce/dog_fe/body_dog_fe.py`
 
 
 ### Generate .tsv for kashtanka.pet testing
