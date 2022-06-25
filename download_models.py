@@ -6,7 +6,9 @@ urls = [
     # v 1.0
     # "https://zenodo.org/record/6665690/files/to_reproduce.zip?download=1"
     # v 1.1 (add_margin weight is cut off)
-    "https://zenodo.org/record/6721246/files/to_reproduce.zip?download=1"
+    # "https://zenodo.org/record/6721246/files/to_reproduce.zip?download=1"
+    # v 1.2 (fixed incorrect preproc for dog body)
+    "https://zenodo.org/record/6743675/files/to_reproduce.zip?download=1"
 ]
 
 
