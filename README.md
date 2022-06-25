@@ -111,20 +111,20 @@ transform_reproduce.py runs head detection and alignment model and body detectio
 
 
 ### Training FE for Cats
-Head-specific model (Dog Head SGD)
+Head-specific model (Cat Head SGD)
 
 `python main.py --config configs/to_reproduce/cat_fe/cat_fe_head.py`
 
-Body-specific model (Dog Body SGD)
+Body-specific model (Cat Body AdamW)
 
 `python main.py --config configs/to_reproduce/cat_fe/body_cat_fe.py`
 
 ### Training FE for Dogs
-Head-specific model (Cat Head SGD)
+Head-specific model (Dog Head SGD)
 
 `python main.py --config configs/to_reproduce/dog_fe/fe_dogs_config.py`
 
-Body-specific model (Cat Body SGD)
+Body-specific model (Dog Body SGD)
 
 `python main.py --config configs/to_reproduce/dog_fe/body_dog_fe.py`
 
