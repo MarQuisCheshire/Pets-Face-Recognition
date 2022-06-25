@@ -101,6 +101,9 @@ def parse_gpus(cfg: Config) -> Union[int, List[int]]:
         gpus = get_gpus()
     else:
         gpus = [int(cfg.device.split(':')[-1])]
+        gpus = list({i for i in gpus if i < torch.cuda.device_count()})
+        if len(gpus) == 0:
+            gpus = 0 if not torch.cuda.is_available() else [0]
     return gpus
 
 
