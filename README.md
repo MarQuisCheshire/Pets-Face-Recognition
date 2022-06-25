@@ -129,7 +129,15 @@ Body-specific model (Cat Body SGD)
 `python main.py --config configs/to_reproduce/dog_fe/body_dog_fe.py`
 
 
-## Evaluation of FE
+### Evaluation of FE on validation datasets
+
+To validate Head-specific model (Dog Head SGD)
+
+`python eval_fe_dog_head_sgd.py`
+
+To validate Head-specific model (Cat Head SGD)
+
+`python eval_fe_cat_head_sgd.py`
 
 
 ### Generate .tsv for kashtanka.pet testing
