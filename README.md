@@ -45,6 +45,18 @@ Head and landmarks detection
 `python main_keypoints.py --config configs/to_reproduce/keypoint/keypoints_config.py`
 
 
+### Evaluation of body detection and segmentation on validation datasets
+
+If you want to test your own models you need to create a script analogous to eval_detection.py.
+
+`python eval_detection.py`
+
+### Evaluation of head and landmark detection on validation datasets
+
+If you want to test your own models you need to create a script analogous to eval_landmark.py.
+
+`python eval_landmark.py`
+
 ### Testing models for body, head and landmarks detection
 
 prepare_table.py runs Mask R-CNN trained on Oxford IIIT pets to predict body bounding boxes,
@@ -115,6 +127,9 @@ Head-specific model (Cat Head SGD)
 Body-specific model (Cat Body SGD)
 
 `python main.py --config configs/to_reproduce/dog_fe/body_dog_fe.py`
+
+
+## Evaluation of FE
 
 
 ### Generate .tsv for kashtanka.pet testing

@@ -128,10 +128,10 @@ def val_dataloader():
 
 def test_dataloader():
     return [
+        DataLoader(val, test_batch_size, collate_fn=collate_fn, num_workers=4),
         DataLoader(OxfordSubset(dataset, train_indices, val_augmentation, ), test_batch_size,
                    collate_fn=collate_fn,
-                   num_workers=4),
-        DataLoader(val, test_batch_size, collate_fn=collate_fn, num_workers=4)
+                   num_workers=4)
     ]
 
 
