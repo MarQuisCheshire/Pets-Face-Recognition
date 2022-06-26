@@ -144,10 +144,14 @@ def main():
     p = Path("../pets_datasets")
     p.mkdir(parents=True, exist_ok=True)
     args = sys.argv
+    c = 0
     for i in args:
         if i in download_options:
             download_options[i](p)
+            c += 1
+    if c == 0:
+        download_all(p)
 
 
 if __name__ == "__main__":
-    download_all(Path("../pets_datasets"))
+    main()
