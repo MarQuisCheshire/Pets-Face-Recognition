@@ -762,12 +762,12 @@ class Preproc13:
         pts = self.detector(torch.tensor(img).to(self.device).permute(2, 0, 1).unsqueeze(0).float() / 255)
         score = pts[0]['scores'].cpu().detach().numpy()
         assert len(score) and score[0] > self.thr
-        bbox = pts = pts[0]['boxes'].cpu().detach().numpy()
+        bbox = pts[0]['boxes'].cpu().detach().numpy()
 
         if self.return_for_metrics:
             return pts
 
-        aimg = img[bbox[1]: bbox[3], bbox[0]:bbox[2]]
+        aimg = img[bbox[1]:bbox[3], bbox[0]:bbox[2]]
         return aimg
 
     def models_init(self):
