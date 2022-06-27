@@ -18,7 +18,7 @@ pytorch_lightning.seed_everything(seed)
 train_augmentation = torchvision.transforms.Compose([
     torchvision.transforms.ToPILImage(),
     torchvision.transforms.Lambda(resize_with_padding),
-    torchvision.transforms.RandomCrop((252, 22)),
+    torchvision.transforms.RandomCrop((252, 252)),
     torchvision.transforms.Resize((256, 256)),
     torchvision.transforms.RandomRotation(5),
     torchvision.transforms.RandomAdjustSharpness(0, 0.1),
