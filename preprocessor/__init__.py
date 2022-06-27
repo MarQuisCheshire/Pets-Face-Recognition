@@ -762,7 +762,8 @@ class Preproc13:
         pts = self.detector(torch.tensor(img).to(self.device).permute(2, 0, 1).unsqueeze(0).float() / 255)
         score = pts[0]['scores'].cpu().detach().numpy()
         assert len(score) and score[0] > self.thr
-        bbox = pts[0]['boxes'].cpu().detach().numpy()
+        bbox = pts[0]['boxes'].cpu().detach().numpy()[0]
+        bbox = np.round(bbox).astype(int)
 
         if self.return_for_metrics:
             return pts
