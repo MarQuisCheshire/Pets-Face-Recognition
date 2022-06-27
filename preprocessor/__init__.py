@@ -166,7 +166,7 @@ class Preproc3:
         self.padding_val = padding_val
         self.detector = None
         self.thr = thr
-        self.min_distance = 5
+        self.min_distance = min_distance
         self.device = device
         self.old_align = old_align
         self.return_for_metrics = False
@@ -741,3 +741,62 @@ class PreprocCombined:
 class IdentityPreproc:
     def __call__(self, img):
         return img
+
+
+class Preproc13:
+
+    def __init__(self, base_pts, dsize, padding_val, thr=0.9, min_distance=5, device='cpu', old_align=False):
+        self.base_pts = base_pts
+        self.dsize = dsize
+        self.padding_val = padding_val
+        self.detector = None
+        self.thr = thr
+        self.min_distance = min_distance
+        self.device = device
+        self.old_align = old_align
+        self.return_for_metrics = False
+        self.models_init()
+
+    @torch.no_grad()
+    def __call__(self, img):
+        pts = self.detector(torch.tensor(img).to(self.device).permute(2, 0, 1).unsqueeze(0).float() / 255)
+        score = pts[0]['scores'].cpu().detach().numpy()
+        assert len(score) and score[0] > self.thr
+        pts = pts[0]['keypoints'].cpu().detach().numpy()
+        bbox = pts = pts[0]['boxes'].cpu().detach().numpy()
+        pts = np.round(pts[0, :, :-1]).astype(int)
+
+        d = []
+        for i in range(len(pts)):
+            for j in range(i + 1, len(pts)):
+                d.append(np.sqrt(((pts[i] - pts[j]) ** 2).sum()))
+        assert all(i > self.min_distance for i in d)
+
+        if self.return_for_metrics:
+            return pts
+
+        aimg = img[bbox[1]: bbox[3], bbox[0]:bbox[2]]
+        return aimg
+
+    def models_init(self):
+        # self.detector = KeyPointsController.load_from_checkpoint(
+        #     str(
+        #         Path(
+        #             'mlruns/9/4100f0feaa39434b92b56b5faf000d97/artifacts/checkpoints/'
+        #             '9/4100f0feaa39434b92b56b5faf000d97/checkpoints/epoch=14-step=62384.ckpt'
+        #         )
+        #     ),
+        #     config=get_dict_wrapper(r'mlruns/9/4100f0feaa39434b92b56b5faf000d97/artifacts/keypoints_config.py')
+        # ).eval().model_loss
+        self.detector = KeyPointsController(get_dict_wrapper(Path('configs/to_reproduce/keypoint/keypoints_config.py')))
+        self.detector.load_state_dict(torch.load(Path('configs/to_reproduce/keypoint/epoch=14.ckpt')))
+        self.detector = self.detector.eval().model_loss
+        self.detector.to(self.device)
+
+    def __getstate__(self):
+        d = {k: v for k, v in self.__dict__.items() if k not in ['detector']}
+        return d
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self.models_init()
