@@ -392,7 +392,6 @@ class Preproc7:
         if self.return_for_metrics:
             return pts
 
-
         aimg = align(img, pts, self.base_pts, self.dsize)
         return aimg
 
@@ -658,7 +657,12 @@ class Preproc5:
 
 class PreprocCombined:
 
-    def __init__(self, thr=0.9, mask_thr=0.6, device='cpu'):
+    def __init__(self, base_pts, dsize, padding_val, thr=0.9, mask_thr=0.7, device='cpu', min_distance=5,):
+        self.base_pts = base_pts
+        self.dsize = dsize
+        self.padding_val = padding_val
+        self.thr = thr
+        self.min_distance = min_distance
         self.detector = None
         self.lmd = None
         self.thr = thr
@@ -676,32 +680,52 @@ class PreprocCombined:
         bbox = np.round(dets[0]['boxes'][0].cpu().detach().numpy()).astype(int)
         mask = (dets[0]['masks'][0, 0].cpu().detach().numpy() > self.mask_thr).astype(int)
 
-        aimg = img * mask[:, :, None]
-        aimg = aimg[bbox[1]:bbox[3], bbox[0]:bbox[2]]
+        aimg = (img * mask[:, :, None]).astype(np.uint8)
+
+        pts = pts[0]['keypoints'].cpu().detach().numpy()
+        pts = np.round(pts[0, :, :-1]).astype(int)
+
+        d = []
+        for i in range(len(pts)):
+            for j in range(i + 1, len(pts)):
+                d.append(np.sqrt(((pts[i] - pts[j]) ** 2).sum()))
+        assert all(i > self.min_distance for i in d)
+
+        aimg = align(aimg, pts, self.base_pts, self.dsize)
 
         return aimg.astype(np.uint8)
 
     def models_init(self):
-        self.detector = DetectionController.load_from_checkpoint(
-            str(
-                Path(
-                    'mlruns/8/e0659336f7d3449fb7b2eac767df655f/artifacts/checkpoints/'
-                    '8/e0659336f7d3449fb7b2eac767df655f/checkpoints/epoch=64-step=16249.ckpt'
-                )
-            ),
-            config=get_dict_wrapper(r'mlruns/8/e0659336f7d3449fb7b2eac767df655f/artifacts/mask_rcnn_config.py')
-        ).eval().model_loss
+        # self.detector = DetectionController.load_from_checkpoint(
+        #     str(
+        #         Path(
+        #             'mlruns/8/e0659336f7d3449fb7b2eac767df655f/artifacts/checkpoints/'
+        #             '8/e0659336f7d3449fb7b2eac767df655f/checkpoints/epoch=64-step=16249.ckpt'
+        #         )
+        #     ),
+        #     config=get_dict_wrapper(r'mlruns/8/e0659336f7d3449fb7b2eac767df655f/artifacts/mask_rcnn_config.py')
+        # ).eval().model_loss
+        # self.detector.to(self.device)
+        #
+        # self.lmd = KeyPointsController.load_from_checkpoint(
+        #     str(
+        #         Path(
+        #             'mlruns/9/4100f0feaa39434b92b56b5faf000d97/artifacts/checkpoints/'
+        #             '9/4100f0feaa39434b92b56b5faf000d97/checkpoints/epoch=14-step=62384.ckpt'
+        #         )
+        #     ),
+        #     config=get_dict_wrapper(r'mlruns/9/4100f0feaa39434b92b56b5faf000d97/artifacts/keypoints_config.py')
+        # ).eval().model_loss
+        # self.lmd.to(self.device)
+
+        self.detector = DetectionController(get_dict_wrapper(Path('configs/to_reproduce/mask/mask_rcnn_config.py')))
+        self.detector.load_state_dict(torch.load(Path('configs/to_reproduce/mask/epoch=64.ckpt')))
+        self.detector = self.detector.eval().model_loss
         self.detector.to(self.device)
 
-        self.lmd = KeyPointsController.load_from_checkpoint(
-            str(
-                Path(
-                    'mlruns/9/4100f0feaa39434b92b56b5faf000d97/artifacts/checkpoints/'
-                    '9/4100f0feaa39434b92b56b5faf000d97/checkpoints/epoch=14-step=62384.ckpt'
-                )
-            ),
-            config=get_dict_wrapper(r'mlruns/9/4100f0feaa39434b92b56b5faf000d97/artifacts/keypoints_config.py')
-        ).eval().model_loss
+        self.lmd = KeyPointsController(get_dict_wrapper(Path('configs/to_reproduce/keypoint/keypoints_config.py')))
+        self.lmd.load_state_dict(torch.load(Path('configs/to_reproduce/keypoint/epoch=14.ckpt')))
+        self.lmd = self.lmd.eval().model_loss
         self.lmd.to(self.device)
 
     def __getstate__(self):
@@ -711,3 +735,8 @@ class PreprocCombined:
     def __setstate__(self, state):
         self.__dict__.update(state)
         self.models_init()
+
+
+class IdentityPreproc:
+    def __call__(self, img):
+        return img
