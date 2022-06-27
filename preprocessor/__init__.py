@@ -677,7 +677,8 @@ class PreprocCombined:
         score = pts[0]['scores'].cpu().detach().numpy()
         assert len(score) and score[0] > self.thr
         dets = self.detector(tensor_img)
-        bbox = np.round(dets[0]['boxes'][0].cpu().detach().numpy()).astype(int)
+        score = dets[0]['scores'].cpu().detach().numpy()
+        assert len(score) and score[0] > self.thr
         mask = (dets[0]['masks'][0, 0].cpu().detach().numpy() > self.mask_thr).astype(int)
 
         aimg = (img * mask[:, :, None]).astype(np.uint8)
