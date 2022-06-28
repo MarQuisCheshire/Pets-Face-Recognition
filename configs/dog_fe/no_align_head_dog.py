@@ -27,6 +27,7 @@ train_augmentation = torchvision.transforms.Compose([
 
 val_augmentation = torchvision.transforms.Compose([
     torchvision.transforms.ToPILImage(),
+    torchvision.transforms.Resize((224, 224)),
     torchvision.transforms.ToTensor(),
 ])
 
